@@ -1,11 +1,12 @@
 <template>
 <div class="subscription_container">
 <div class="topic_header">
-  <div class="topic" v-on:click="setTopic();toggleShowMessages();">{{subscription.topic}} - ({{subscription.messages.length}})
+  <div class="topic" v-on:click="setTopic();">
+    <span class="subscription_status_true">•</span> {{subscription.topic}} - ({{subscription.messages.length}})
   </div>
-  <div class="toggle_messages" :class="'show_messages_'+showMessages">
-    <template v-if="!show"> ➕ </template>
-    <template v-if="show"> ➖ </template>
+  <div class="toggle_messages" v-on:click="toggleShowMessages();" :class="'show_messages_'+showMessages">
+    <template v-if="!show"> + </template>
+    <template v-if="show"> - </template>
   </div>
 </div>
   <ul class="messages" v-if="showMessages">
@@ -22,7 +23,7 @@ export default {
     data: function () {
       return {
           buffer: [],
-          show:true
+          show:false
       }
   },
   methods: {
@@ -50,6 +51,8 @@ export default {
     -webkit-box-shadow: 0px 1px 1px 0px rgba(184,184,184,1);
     -moz-box-shadow: 0px 1px 1px 0px rgba(184,184,184,1);
     box-shadow: 0px 1px 1px 0px rgba(184,184,184,1);
+    margin-bottom:10px;
+    border-radius: 2px;
 }
 .topic{
   padding: 10px;
@@ -68,10 +71,10 @@ export default {
   min-height:1em;
 }
 .toggle_messages{
-  width:30px;
-  text-align:right;
+  text-align:center;
   margin-right:10px;
   cursor:pointer;
+  font-weight:bold;
 }
 .show_messages_true{
   content:'goodbye';
@@ -82,5 +85,12 @@ export default {
 .topic_header{
   display:flex;
   align-items:center;
+}
+.subscription_status_true{
+  font-weight:bold;
+  color:green;
+  margin-right: 10px;
+  padding-right:10px;
+  border-right:dotted 1px #cccccc;
 }
 </style>
