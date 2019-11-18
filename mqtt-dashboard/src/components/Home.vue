@@ -169,7 +169,7 @@ text-align:center;
 .publish_form{
     display:flex;
     padding: 20px;
-    border-bottom:solid 1px #7D90A6;
+    border-bottom:solid 1px #cccccc;
     align-items:stretch;
     background-color:#E4ECF5;
 }
@@ -180,6 +180,7 @@ text-align:center;
     color:white;
     font-weight:bold;
     cursor:pointer;
+    border-radius:4px;
 }
 .subscribed_false{
     background-color:#7CAA98;
