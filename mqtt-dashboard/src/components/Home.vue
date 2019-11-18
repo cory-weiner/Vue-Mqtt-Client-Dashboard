@@ -23,7 +23,7 @@
         <textarea v-model="message" class="message_input"></textarea>
     </div>
     <div class='message_controls'>
-        <div><input type="checkbox" v-model="retain"><label>Retain?</label></div>
+        <div><input type="checkbox" v-model="retain"><label>Retain</label></div>
         <button v-on:click="onPublish" class="publish_button">Publish</button>
     </div>
 </div>
@@ -153,13 +153,18 @@ text-align:center;
 .topic_form{
     display:flex;
     border:none;
+    background-color:#f7f9fc;
+    border-bottom:solid 1px #cccccc;
 }
 #topic_form_topic{
+  background:none;
     padding:10px 20px;
     font-weight:bold;
     font-size:1.4em;
     flex:1;
     color:#495F7A;
+    border:none;
+    
 }
 .publish_form{
     display:flex;
@@ -170,7 +175,7 @@ text-align:center;
 }
 #subscribe_button{
     box-sizing:border-box;
-    margin:0px;
+    margin:10px;
     padding:10px 40px;
     color:white;
     font-weight:bold;

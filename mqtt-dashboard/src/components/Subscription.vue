@@ -1,9 +1,12 @@
 <template>
 <div class="subscription_container">
 <div class="topic_header">
-  <div class="topic" v-on:click="setTopic">{{subscription.topic}} - ({{subscription.messages.length}})
+  <div class="topic" v-on:click="setTopic();toggleShowMessages();">{{subscription.topic}} - ({{subscription.messages.length}})
   </div>
-  <div class="toggle_messages" :class="'show_messages_'+showMessages" v-on:click="toggleShowMessages"><template v-if="!show"> ➕ </template><template v-if="show"> ➖ </template></div>
+  <div class="toggle_messages" :class="'show_messages_'+showMessages">
+    <template v-if="!show"> ➕ </template>
+    <template v-if="show"> ➖ </template>
+  </div>
 </div>
   <ul class="messages" v-if="showMessages">
     <li v-for="(message,index) in subscription.messages" v-bind:key="index">{{message}}</li>
@@ -43,12 +46,10 @@ export default {
 <style>
 .subscription_container{
   border:solid 1px  	#B8B8B8;
-  margin-top:10px;
   background-color: 	#F8F8F8;
--webkit-box-shadow: 0px 1px 1px 0px rgba(184,184,184,1);
--moz-box-shadow: 0px 1px 1px 0px rgba(184,184,184,1);
-box-shadow: 0px 1px 1px 0px rgba(184,184,184,1);
-border-radius:2px;
+    -webkit-box-shadow: 0px 1px 1px 0px rgba(184,184,184,1);
+    -moz-box-shadow: 0px 1px 1px 0px rgba(184,184,184,1);
+    box-shadow: 0px 1px 1px 0px rgba(184,184,184,1);
 }
 .topic{
   padding: 10px;
