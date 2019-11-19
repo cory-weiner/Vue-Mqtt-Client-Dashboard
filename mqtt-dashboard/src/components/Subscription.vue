@@ -19,7 +19,7 @@
 
 export default {
   name: 'HelloWorld',
-  props: ['subscription'],
+  props: ['subscription','isActive'],
     data: function () {
       return {
           buffer: [],
