@@ -2,7 +2,7 @@
 <div class="subscription_container">
 <div class="topic_header">
   <div class="topic" v-on:click="setTopic();">
-    <span class="subscription_status_true">•</span> {{subscription.topic}} - ({{subscription.messages.length}})
+    <span class="subscription_status_true">•</span>{{subscription.topic}} - ({{subscription.messages.length}})
   </div>
   <div class="toggle_messages" v-on:click="toggleShowMessages();" :class="'show_messages_'+showMessages">
     <template v-if="!show"> + </template>
@@ -19,7 +19,7 @@
 
 export default {
   name: 'HelloWorld',
-  props: ['subscription','isActive'],
+  props: ['subscription','subscriptionList'],
     data: function () {
       return {
           buffer: [],

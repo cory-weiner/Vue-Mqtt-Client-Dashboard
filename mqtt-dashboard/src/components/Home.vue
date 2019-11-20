@@ -6,43 +6,49 @@
         <label>Host: </label><input v-model="host" id="data_host">
         <label>Port: </label><input v-model="port" id="data_port">
         <label>Client Id: </label><input v-model="clientId">
-        <button id="connect">Connect</button>
+        <button id="connect" v-on:click="newConnection">Connect</button>
     </div>
 </div>
-
-<div class="topic_form">
-    <div :class="'topic_'+isSubscribed"></div>
-    <input v-model="topic" id="topic_form_topic" placeholder="type/topic/here...">
-    <template v-if="isSubscribed">
-        <button v-on:click="onUnsubscribe" id="subscribe_button" v-bind:class="'subscribed_'+isSubscribed">Unsubscribe</button>
-    </template>
-    <template v-if="!isSubscribed">
-        <button v-on:click="onSubscribe" id="subscribe_button"  v-bind:class="'subscribed_'+isSubscribed">Subscribe</button>
-    </template>
-    
-</div>
-
-
-<div class="publish_form">
-    <div class="message_container">
-        <label>Publish message: </label>
-        <textarea v-model="message" class="message_input"></textarea>
+<template v-if="client.options">
+    <div class="client_details">Connected to: {{client.options.href}}  | Client ID: {{client.options.clientId}}</div>
+    <div class="topic_form">
+        <div :class="'topic_'+isSubscribed"></div>
+        <input v-model="topic" id="topic_form_topic" placeholder="type/topic/here...">
+        <template v-if="isSubscribed">
+            <button v-on:click="onUnsubscribe" id="subscribe_button" v-bind:class="'subscribed_'+isSubscribed">Unsubscribe</button>
+        </template>
+        <template v-if="!isSubscribed">
+            <button v-on:click="onSubscribe" id="subscribe_button"  v-bind:class="'subscribed_'+isSubscribed">Subscribe</button>
+        </template>
+        
     </div>
-    <div class='message_controls'>
-        <div><input type="checkbox" v-model="retain"><label>Retain</label></div>
-        <button v-on:click="onPublish" class="publish_button">Publish</button>
+
+
+    <div class="publish_form">
+        <div class="message_container">
+            <label>Publish message: </label>
+            <textarea v-model="message" class="message_input"></textarea>
+        </div>
+        <div class='message_controls'>
+            <div><input type="checkbox" v-model="retain"><label>Retain</label></div>
+            <button v-on:click="onPublish" class="publish_button">Publish</button>
+        </div>
     </div>
-</div>
 
 
 
 
-<div class="subscriptions">
-    <h1 v-if="subscriptionCount">Subscriptions</h1>
-    <div v-for="(subscription, index) in subscriptions" v-bind:key="index">
-        <app-subscription :subscription="subscription" :isActive="topic==subscription.topic" v-on:setTopic="onSetTopic"></app-subscription>
+    <div class="subscriptions">
+        <h1 v-if="subscriptionCount">Subscriptions</h1>
+        <div v-for="(subscription, index) in subscriptions" v-bind:key="index">
+            <app-subscription :subscription="subscription" v-on:setTopic="onSetTopic"></app-subscription>
+        </div>
     </div>
-</div>
+</template>
+<div v-else class="no_connection_message">Connect to a client to publish or subscribe.</div>
+{{client_subscriptions}}
+
+{{client._resubscribeTopics}}
 </div>
 </template>
 
@@ -64,7 +70,7 @@ export default {
       host: 'mqtt://test.mosquitto.org',
       port: '8080',
       topic: 'cory/test/',
-      clientId: 'dsakdsadsajkdbsajdb',
+      clientId: 'client_' +  Date.now().toString(),
       message: '',
       retain:false,
       client: {},
@@ -72,10 +78,12 @@ export default {
     }
   },
   created(){
-       this.client = mqtt.connect(this.host+':'+this.port,{clientId:this.clientId})
-       this.client.on('message', this.onMessage)
     },
     methods: {
+        newConnection(){
+            this.client = mqtt.connect(this.host+':'+this.port,{clientId:this.clientId})
+            this.client.on('message', this.onMessage)
+        },
         onMessage(topic,message){
             this.subscriptions.find((sub)=>{
                 return sub.topic == topic
@@ -94,12 +102,7 @@ export default {
         },
         onUnsubscribe(){
             this.client.unsubscribe(this.topic)
-            
-            this.subscriptions.forEach((sub,index)=>{
-                if (sub.topic == this.topic){
-                    this.subscriptions.splice(index,1)
-                }
-            })
+            this.client.__ob__.dep.notify()
         },
         onPublish(){
             this.client.publish(this.topic,this.message,{retain:this.retain})
@@ -119,6 +122,13 @@ export default {
         },
         subscriptionCount(){
             return this.subscriptions.length
+        },
+        client_subscriptions(){
+            // Add logic to return list of client subscriptions, including messages, client status, and submitted subscription details.
+            // this.client.subscriptions.forEach((subscription)=>{
+            //     subscription.client_details = this.client._resubscribeTopics.filter()
+            // })
+            return  true
         }
     }
 }
@@ -180,6 +190,21 @@ background-color:#8aa1ba;
 color:#232e3b;
 cursor:pointer;
 }
+.no_connection_message{
+    padding:40px;
+    text-align:center;
+    font-size:1.4em;
+    text-decoration:italic;
+}
+.client_details{
+    padding: 10px 20px;
+    background-color:#F8F8F8;
+    border-bottom:solid 1px #cccccc;
+    font-size:.8em;
+    color:#666666;
+}
+
+
 .topic_form{
     display:flex;
     border:none;
