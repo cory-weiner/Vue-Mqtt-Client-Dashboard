@@ -1,9 +1,8 @@
 <template>
 <div class="subscription_container">
-{{subscription}}
 <div class="topic_header">
   <div class="topic" v-on:click="setTopic();">
-    <span class="subscription_status_true">•</span>{{subscription.topic}} - ({{subscription.messages.length}})
+    <div :class="'subscription_status_'+subscription.status"></div><div>{{subscription.topic}} - ({{subscription.messages.length}}) <template v-if="subscription.client">- qos: {{subscription.client.qos}}</template></div>
   </div>
   <div class="toggle_messages" v-on:click="toggleShowMessages();" :class="'show_messages_'+showMessages">
     <template v-if="!show"> + </template>
@@ -60,6 +59,8 @@ export default {
   font-weight:bold;
   flex:1;
   cursor:pointer;
+  display: flex;
+  align-items: center;
 }
 .messages{
   margin:0px;
@@ -87,11 +88,17 @@ export default {
   display:flex;
   align-items:center;
 }
-.subscription_status_true{
+div[class^="subscription_status_"]{
   font-weight:bold;
-  color:green;
-  margin-right: 10px;
-  padding-right:10px;
-  border-right:dotted 1px #cccccc;
+  border-radius:100px;
+  margin-right:10px;
+  width:10px;
+  height:10px;
+} 
+.subscription_status_false{
+  background-color:#C7524B;
+}
+.subscription_status_true{
+  background-color:#4a665b;
 }
 </style>

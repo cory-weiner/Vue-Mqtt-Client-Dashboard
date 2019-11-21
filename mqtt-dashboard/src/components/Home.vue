@@ -40,17 +40,17 @@
 
     <div class="subscriptions">
         <h1 v-if="subscriptionCount">Subscriptions</h1>
-        <div v-for="(subscription, index) in client_subscriptions" v-bind:key="index">
+        <div v-for="(subscription, index) in clientSubscriptions" v-bind:key="index">
             <app-subscription :subscription="subscription" v-on:setTopic="onSetTopic"></app-subscription>
         </div>
     </div>
 
-    <div v-for="(subscription,index) in client_subscriptions" v-bind:key="index">
-    {{subscription}}
-    </div>
 </template>
 <div v-else class="no_connection_message">Connect to a client to publish or subscribe.</div>
+
+
 </div>
+
 </template>
 
 <script>
@@ -92,13 +92,28 @@ export default {
             // this.msglog.push(message.toString())
         },
         onSubscribe(){
-            if (!this.subscriptions.find((sub)=>{return sub.topic == this.topic})){
+            // Find the topic if it already exists:
+            if (!this.subscriptions.find((sub)=>{
+                if (sub.topic == this.topic){
+                    if (sub.status){
+                        alert('Already subscribed to that topic.')
+                    }
+                    else{
+                       this.client.subscribe(this.topic) 
+                       sub.status = true
+                    }
+                    return true
+                }
+                else{
+                    return false
+                }
+            })){
+                // If no sub was found:
                 this.client.subscribe(this.topic)
                 this.subscriptions.push({host:this.host,port:this.port,clientId:this.clientId,topic:this.topic,messages:[],id:this.topic,revision:0, status:true})
             }
-            else {
-                alert('Already subscribed to that topic.')
-            }
+
+            this.client.__ob__.dep.notify()
 
         },
         onUnsubscribe(){
@@ -122,7 +137,7 @@ export default {
     },
     computed: {
         isSubscribed(){
-            if (this.subscriptions.find((sub)=>{return sub.topic == this.topic})){
+            if (this.subscriptions.find((sub)=>{return sub.topic == this.topic && sub.status})){
                 return true
             }
             else {
@@ -132,19 +147,16 @@ export default {
         subscriptionCount(){
             return this.subscriptions.length
         },
-        client_subscriptions(){
-            let new_subscriptions =  this.subscriptions.map((subscription)=>{
-              if (this.client._resubscribeTopics[subscription.topic]){
-                subscription.client =  this.client._resubscribeTopics[subscription.topic]
-              }
-              else{
-                subscription.client = null
-              }
-              return subscription
+        clientJson(){
+            return JSON.stringify(this.client, null, 2);
+        },
+        clientSubscriptions(){
+            return this.subscriptions.map((subscription)=>{
+                subscription['client'] = this.client._resubscribeTopics[subscription.topic]
+                return subscription
             })
-            return new_subscriptions
+            
         }
-
     }
 }
 </script>
