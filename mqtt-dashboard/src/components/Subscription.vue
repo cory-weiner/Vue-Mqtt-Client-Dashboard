@@ -1,5 +1,6 @@
 <template>
 <div class="subscription_container">
+{{subscription}}
 <div class="topic_header">
   <div class="topic" v-on:click="setTopic();">
     <span class="subscription_status_true">•</span>{{subscription.topic}} - ({{subscription.messages.length}})
@@ -19,7 +20,7 @@
 
 export default {
   name: 'HelloWorld',
-  props: ['subscription','subscriptionList'],
+  props: ['subscription'],
     data: function () {
       return {
           buffer: [],

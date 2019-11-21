@@ -40,15 +40,16 @@
 
     <div class="subscriptions">
         <h1 v-if="subscriptionCount">Subscriptions</h1>
-        <div v-for="(subscription, index) in subscriptions" v-bind:key="index">
+        <div v-for="(subscription, index) in client_subscriptions" v-bind:key="index">
             <app-subscription :subscription="subscription" v-on:setTopic="onSetTopic"></app-subscription>
         </div>
     </div>
+
+    <div v-for="(subscription,index) in client_subscriptions" v-bind:key="index">
+    {{subscription}}
+    </div>
 </template>
 <div v-else class="no_connection_message">Connect to a client to publish or subscribe.</div>
-{{client_subscriptions}}
-
-{{client._resubscribeTopics}}
 </div>
 </template>
 
@@ -64,7 +65,7 @@ export default {
   components: {
      'app-subscription': Subscription 
   },
-    data: function () {
+  data: function () {
     return {
       msglog: [],
       host: 'mqtt://test.mosquitto.org',
@@ -93,7 +94,7 @@ export default {
         onSubscribe(){
             if (!this.subscriptions.find((sub)=>{return sub.topic == this.topic})){
                 this.client.subscribe(this.topic)
-                this.subscriptions.push({host:this.host,port:this.port,clientId:this.clientId,topic:this.topic,messages:[]})
+                this.subscriptions.push({host:this.host,port:this.port,clientId:this.clientId,topic:this.topic,messages:[],id:this.topic,revision:0, status:true})
             }
             else {
                 alert('Already subscribed to that topic.')
@@ -102,6 +103,14 @@ export default {
         },
         onUnsubscribe(){
             this.client.unsubscribe(this.topic)
+            
+            this.subscriptions.find((subscription)=>{
+                if (subscription.topic == this.topic){
+                  subscription.status = false
+                  return true
+                }
+              });
+
             this.client.__ob__.dep.notify()
         },
         onPublish(){
@@ -124,12 +133,18 @@ export default {
             return this.subscriptions.length
         },
         client_subscriptions(){
-            // Add logic to return list of client subscriptions, including messages, client status, and submitted subscription details.
-            // this.client.subscriptions.forEach((subscription)=>{
-            //     subscription.client_details = this.client._resubscribeTopics.filter()
-            // })
-            return  true
+            let new_subscriptions =  this.subscriptions.map((subscription)=>{
+              if (this.client._resubscribeTopics[subscription.topic]){
+                subscription.client =  this.client._resubscribeTopics[subscription.topic]
+              }
+              else{
+                subscription.client = null
+              }
+              return subscription
+            })
+            return new_subscriptions
         }
+
     }
 }
 </script>
