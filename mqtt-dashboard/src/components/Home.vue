@@ -221,7 +221,6 @@ cursor:pointer;
     padding:40px;
     text-align:center;
     font-size:1.4em;
-    text-decoration:italic;
 }
 .client_details{
     padding: 10px 20px;
