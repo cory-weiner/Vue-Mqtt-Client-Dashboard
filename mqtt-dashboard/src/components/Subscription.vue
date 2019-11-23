@@ -1,15 +1,16 @@
 <template>
 <div class="subscription_container">
-<div class="topic_header">
+<div class="topic_header" v-on:click="toggleShowMessages();"> 
   <div class="topic" v-on:click="setTopic();">
     <div :class="'subscription_status_'+subscription.status"></div><div>{{subscription.topic}} - ({{subscription.messages.length}}) <template v-if="subscription.client">- qos: {{subscription.client.qos}}</template></div>
   </div>
-  <div class="toggle_messages" v-on:click="toggleShowMessages();" :class="'show_messages_'+showMessages">
+  <div class="toggle_messages" :class="'show_messages_'+showMessages">
     <template v-if="!show"> + </template>
     <template v-if="show"> - </template>
   </div>
 </div>
   <ul class="messages" v-if="showMessages">
+    <li v-if="!subscription.messages.length"><i>No messages for this subscription...</i></li>
     <li v-for="(message,index) in subscription.messages" v-bind:key="index">{{message}}</li>
 </ul>
 </div>
@@ -23,7 +24,7 @@ export default {
     data: function () {
       return {
           buffer: [],
-          show:false
+          show:true
       }
   },
   methods: {
@@ -38,7 +39,7 @@ export default {
    },
   computed: {
     showMessages(){
-      return this.show && this.subscription.messages.length 
+      return this.show
     }
   }
 }

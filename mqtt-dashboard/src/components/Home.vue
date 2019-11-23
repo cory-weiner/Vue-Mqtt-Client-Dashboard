@@ -14,6 +14,7 @@
     <div class="topic_form">
         <div :class="'topic_'+isSubscribed"></div>
         <input v-model="topic" id="topic_form_topic" placeholder="type/topic/here...">
+        <div class="field_option"><label>qos:</label><input v-model="subscribe_qos"></div>
         <template v-if="isSubscribed">
             <button v-on:click="onUnsubscribe" id="subscribe_button" v-bind:class="'subscribed_'+isSubscribed">Unsubscribe</button>
         </template>
@@ -45,11 +46,17 @@
         </div>
     </div>
 
+    <div class="toggle_client" v-on:click="show_client_details=!show_client_details">Show client details >></div>
+<div v-if="show_client_details">
+        <pre>
+        {{client}}
+        </pre>
+    </div>
+</div>
+
 </template>
 <div v-else class="no_connection_message">Connect to a client to publish or subscribe.</div>
 
-
-</div>
 
 </template>
 
@@ -70,12 +77,14 @@ export default {
       msglog: [],
       host: 'mqtt://test.mosquitto.org',
       port: '8080',
-      topic: 'cory/test/',
+      topic: 'test/topic/',
+      subscribe_qos: 0,
       clientId: 'client_' +  Date.now().toString(),
       message: '',
       retain:false,
       client: {},
-      subscriptions: []
+      subscriptions: [],
+      show_client_details: false
     }
   },
   created(){
@@ -109,7 +118,7 @@ export default {
                 }
             })){
                 // If no sub was found:
-                this.client.subscribe(this.topic)
+                this.client.subscribe(this.topic, {qos:parseInt(this.subscribe_qos)})
                 this.subscriptions.push({host:this.host,port:this.port,clientId:this.clientId,topic:this.topic,messages:[],id:this.topic,revision:0, status:true})
             }
 
@@ -236,6 +245,25 @@ cursor:pointer;
     border:none;
     background-color:#f7f9fc;
     border-bottom:solid 1px #cccccc;
+    align-items:center;
+}
+.field_option{
+    display:flex;
+    align-items:stretch;
+    border-radius:4px;
+    border:solid 1px #cccccc;
+    text-align:center;
+}
+.field_option label{
+    padding:10px;
+    border-right: solid 1px #cccccc;
+}
+.field_option input{
+    text-align:center;
+    width:1em;
+    padding: 0px 15px;
+    border-radius:2px;
+    border:none;
 }
 #topic_form_topic{
   background:none;
@@ -321,5 +349,11 @@ cursor:pointer;
     -webkit-box-shadow: 0px 1px 1px 0px rgba(184,184,184,1);
     -moz-box-shadow: 0px 1px 1px 0px rgba(184,184,184,1);
     box-shadow: 0px 1px 1px 0px rgba(184,184,184,1);
+}
+.toggle_client{
+    cursor:pointer;
+    padding: 10px 20px;
+    border-top:solid 1px #cccccc;
+    text-decoration:underline;
 }
 </style>
