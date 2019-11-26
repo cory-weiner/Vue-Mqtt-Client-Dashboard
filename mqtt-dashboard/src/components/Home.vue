@@ -54,11 +54,9 @@
         </div>
     </div>
 
-<<<<<<< HEAD
+
     <div class="toggle_client" v-on:click="show_client_details=!show_client_details">Show client details</div>
-=======
-    <div class="toggle_client" v-on:click="show_client_details=!show_client_details">Show client details >></div>
->>>>>>> 8740f2e98de202ecce70393007e77e1661dc61fa
+
     <div v-if="show_client_details">
         <pre>
         {{client}}
