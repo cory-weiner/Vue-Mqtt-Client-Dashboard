@@ -34,8 +34,12 @@
         
         <div class='message_controls'>
         
-            <div><div class="field_option"><label>Retain</label><input type="checkbox" v-model="retain"></div></div>
-            <div><div class="field_option"><label>qos:</label><input v-model="publish_qos"></div></div>
+            <div>
+                <div class="field_option"><label>Retain</label><input type="checkbox" v-model="retain"></div>
+            </div>
+            <div>
+                <div class="field_option"><label>qos:</label><input v-model="publish_qos"></div>
+            </div>
             <button v-on:click="onPublish" class="publish_button">Publish</button>
         </div>
     </div>
@@ -199,6 +203,7 @@ body{
     font-size:1.2em;
     font-weight:bold;
     white-space: nowrap; 
+    margin:10px 0px;
 }
 .logo b{
     color:white;
@@ -253,24 +258,32 @@ cursor:pointer;
     align-items:center;
 }
 .field_option{
-    display:flex;
-    align-items:stretch;
-    border-radius:4px;
-    border:solid 1px #cccccc;
-    text-align:center;
-
+  display:flex;
+  border:solid 1px #cccccc;
+  align-items: stretch;
+  border-radius:4px;
+  background-color:white;
 }
 .field_option label{
-    padding:10px;
-    border-right: solid 1px #cccccc;
-    flex:1;
+  flex:1;
+  padding: 5px 10px;
+  border-right: solid 1px #cccccc;
+  color:#666666;
+  font-size:.8em;
 }
 .field_option input{
     text-align:center;
-    border-radius:2px;
+  flex:1;
+  width: 100%;
+    box-sizing: border-box; /* add this */
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    background-color:white;
     border:none;
-    box-sizing : border-box;
-    flex:1;
+    background:none;
+}
+.field_option input[type='checkbox']{
+    align-self:center;
 }
 #topic_form_topic{
   background:none;
