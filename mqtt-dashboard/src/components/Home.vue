@@ -75,8 +75,8 @@ export default {
   data: function () {
     return {
       msglog: [],
-      host: 'mqtt://test.mosquitto.org',
-      port: '8080',
+      host: 'wss://test.mosquitto.org',
+      port: '8081',
       topic: 'test/topic/',
       subscribe_qos: 0,
       clientId: 'client_' +  Date.now().toString(),
