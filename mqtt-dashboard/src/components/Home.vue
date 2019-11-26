@@ -3,6 +3,7 @@
 <div class="connection_settings_form">
     <div class="logo"><b>mqtt://</b> dashboard</div>
     <div class="connection_form_controls">
+        <span :class="'status_'+client.connected" class="client_status"></span>
         <label>Host: </label><input v-model="host" id="data_host">
         <label>Port: </label><input v-model="port" id="data_port">
         <label>Client Id: </label><input v-model="clientId">
@@ -30,8 +31,11 @@
             <label>Publish message: </label>
             <textarea v-model="message" class="message_input"></textarea>
         </div>
+        
         <div class='message_controls'>
-            <div><input type="checkbox" v-model="retain"><label>Retain</label></div>
+        
+            <div><div class="field_option"><label>Retain</label><input type="checkbox" v-model="retain"></div></div>
+            <div><div class="field_option"><label>qos:</label><input v-model="publish_qos"></div></div>
             <button v-on:click="onPublish" class="publish_button">Publish</button>
         </div>
     </div>
@@ -79,6 +83,7 @@ export default {
       port: '8080',
       topic: 'test/topic/',
       subscribe_qos: 0,
+      publish_qos: 0,
       clientId: 'client_' +  Date.now().toString(),
       message: '',
       retain:false,
@@ -108,7 +113,7 @@ export default {
                         alert('Already subscribed to that topic.')
                     }
                     else{
-                       this.client.subscribe(this.topic) 
+                       this.client.subscribe(this.topic,{qos:parseInt(this.subscribe_qos)}) 
                        sub.status = true
                     }
                     return true
@@ -138,7 +143,7 @@ export default {
             this.client.__ob__.dep.notify()
         },
         onPublish(){
-            this.client.publish(this.topic,this.message,{retain:this.retain})
+            this.client.publish(this.topic,this.message,{qos:parseInt(this.publish_qos),retain:this.retain})
         },
         onSetTopic(newTopic){
             this.topic = newTopic
@@ -253,17 +258,19 @@ cursor:pointer;
     border-radius:4px;
     border:solid 1px #cccccc;
     text-align:center;
+
 }
 .field_option label{
     padding:10px;
     border-right: solid 1px #cccccc;
+    flex:1;
 }
 .field_option input{
     text-align:center;
-    width:1em;
-    padding: 0px 15px;
     border-radius:2px;
     border:none;
+    box-sizing : border-box;
+    flex:1;
 }
 #topic_form_topic{
   background:none;
@@ -315,6 +322,14 @@ cursor:pointer;
     background-color:#FA857E;
     border:solid 1px #C7524B;
 }
+.status_true{
+    background-color: #6e847b;
+    border:solid 1px #4a665b;    
+}
+.status_false, .status_undefined{
+    background-color:#FA857E;
+    border:solid 1px #C7524B;   
+}
 .message_input{
     padding: 10px 20px;
     width:100%;
@@ -332,13 +347,14 @@ cursor:pointer;
     margin-bottom:10px;
 }
 .message_controls{
-    display:flex;
     flex-direction: column;
     width:200px;
+    display:flex;
+}
+.message_controls>*{
+    margin-bottom:10px;
 }
 .publish_button{
-    margin:10px;
-    margin-left:0px;
     padding: 15px 40px;
     border-radius:2px;
     border:solid 1px #cccccc;
@@ -355,5 +371,12 @@ cursor:pointer;
     padding: 10px 20px;
     border-top:solid 1px #cccccc;
     text-decoration:underline;
+}
+.client_status{
+    display:inline-block;
+    width:10px;
+    height:10px;
+    border-radius:100px;
+    margin-right:10px;
 }
 </style>
