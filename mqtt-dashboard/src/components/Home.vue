@@ -47,17 +47,17 @@
     </div>
 
     <div class="toggle_client" v-on:click="show_client_details=!show_client_details">Show client details >></div>
-<div v-if="show_client_details">
+    <div v-if="show_client_details">
         <pre>
         {{client}}
         </pre>
     </div>
-</div>
+
 
 </template>
 <div v-else class="no_connection_message">Connect to a client to publish or subscribe.</div>
 
-
+</div>
 </template>
 
 <script>
