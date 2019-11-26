@@ -2,7 +2,7 @@
 <div class="subscription_container">
 <div class="topic_header" v-on:click="toggleShowMessages();"> 
   <div class="topic" v-on:click="setTopic();">
-    <div :class="'subscription_status_'+subscription.status"></div><div>{{subscription.topic}} - ({{subscription.messages.length}}) <template v-if="subscription.client">- qos: {{subscription.client.qos}}</template></div>
+    <div :class="'subscription_status_'+subscription.status"></div><div>{{subscription.topic}} — ({{subscription.messages.length}}) <template v-if="subscription.client"> — qos: {{subscription.client.qos}}</template></div>
   </div>
   <div class="toggle_messages" :class="'show_messages_'+showMessages">
     <template v-if="!show"> + </template>
