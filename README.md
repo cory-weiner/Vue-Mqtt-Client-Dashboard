@@ -1,7 +1,9 @@
 # Vue-Mqtt-Client-Dashboard
 An mqtt client dashboard written in Vue. Utilizes MQTT.js library.
 
-[Working Demo](https://inspiring-beaver-f90fa7.netlify.com/) - This demo has a known issue with Firefox yielding error "The operation is insecure." Due to SSL / CORS issue.
+[Working Demo](https://inspiring-beaver-f90fa7.netlify.com/) - By default firefox does not allow https:// to ws:// connections.
+This can be disabled by going to firefox's about:config and toggling network.websocket.allowInsecureFromHTTPS will get rid of the SecurityError as [documented here](https://stackoverflow.com/questions/11768221/firefox-websocket-security-issue)
+
 
 To use, Clone the repository and install dependancies
 >npm install
